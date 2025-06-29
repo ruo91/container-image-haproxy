@@ -1,0 +1,90 @@
+/# explicitly specified/a\
+\
+## Event Loop and OS Integration\
+# Enable epoll support for efficient I/O event notification on Linux\
+USE_EPOLL=1\
+\
+# Use accept4() syscall with O_NONBLOCK and CLOEXEC flags\
+USE_ACCEPT4=1\
+\
+# Use Linux futexes for fast user-space locking\
+USE_FUTEX=1\
+\
+# Use prctl() to set process name and behavior\
+USE_PRCTL=1\
+\
+# Enable getaddrinfo() for modern IPv6/IPv4 DNS resolution\
+USE_GETADDRINFO=1\
+\
+# Use fastcall-style register parameter passing optimization (gcc specific)\
+USE_REGPARM=1\
+\
+## Threading and Concurrency\
+# Enable multi-threading support\
+USE_THREAD=1\
+\
+# Use PTHREAD_PROCESS_SHARED mutexes for inter-process/thread synchronization\
+USE_PTHREAD_PSHARED=1\
+\
+# Enable CPU affinity support to pin processes/threads to cores\
+USE_CPU_AFFINITY=1\
+\
+# Enable thread stack dumps for debugging on SIGQUIT\
+USE_THREAD_DUMP=1\
+\
+\
+## Proxy and Network Features\
+# Enable Netfilter (nf_conntrack) integration for connection tracking\
+USE_NETFILTER=1\
+\
+# Enable generic Transparent Proxy (TPROXY) support\
+USE_TPROXY=1\
+\
+# Enable Linux-specific TPROXY socket option support\
+USE_LINUX_TPROXY=1\
+\
+# Enable TCP Fast Open for reduced connection latency\
+USE_TFO=1\
+\
+# Enable QUIC protocol support (over UDP with TLS 1.3)\
+USE_QUIC=1\
+\
+## Compression Support\
+# Disable zlib compression because SLZ is used instead\
+# SLZ offers much faster compression with lower CPU usage,\
+# making it better suited for high-concurrency proxies\
+USE_ZLIB=0\
+\
+# Enable SLZ compression support for HTTP responses\
+# SLZ is a lightweight, stateless, zlib-compatible compressor that provides\
+# significantly faster compression with reduced CPU overhead,\
+# ideal for high-concurrency proxy workloads\
+USE_SLZ=1\
+\
+# Link with libm for advanced math functions (used in Lua)\
+USE_MATH=1\
+\
+# Enable built-in Prometheus metrics exporter\
+USE_PROMEX=1\
+\
+## Regular Expression Engine\
+# Enable PCRE2 regular expression support\
+USE_PCRE2=1\
+\
+# Enable PCRE2 Just-In-Time compilation for faster regex matching\
+USE_PCRE2_JIT=1\
+\
+## Debugging and Profiling\
+# Enable memory allocation profiling for debugging\
+USE_MEMORY_PROFILING=1\
+\
+## Cryptography and TLS\
+# Enable use of crypt() for password hashing\
+USE_LIBCRYPT=1\
+\
+# Enable OpenSSL support for TLS/SSL\
+USE_OPENSSL=1\
+\
+## Compatibility\
+# Enable compatibility with older linkers (legacy systems)\
+USE_OBSOLETE_LINKER=1
