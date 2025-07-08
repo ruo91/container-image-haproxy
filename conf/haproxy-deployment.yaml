@@ -1,0 +1,96 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: haproxy
+  namespace: t1-redis
+  labels:
+    app: haproxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: haproxy
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: haproxy
+    spec:
+      restartPolicy: Always
+      serviceAccountName: haproxy
+      schedulerName: default-scheduler
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/worker
+                    operator: Exists
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+        runAsNonRoot: false
+        fsGroup: 0
+        seccompProfile:
+          type: Unconfined
+      containers:
+        - resources: {}
+          readinessProbe:
+            tcpSocket:
+              port: 1936
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+          name: haproxy
+          command:
+            - sh
+            - '-c'
+            - |
+              python3 /opt/haproxy/generate.py \
+              --template /opt/haproxy/haproxy-template.cfg \
+              --output /opt/haproxy/haproxy.cfg
+              exec /usr/sbin/haproxy -W -db -f /opt/haproxy/haproxy.cfg
+          livenessProbe:
+            tcpSocket:
+              port: 1936
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis-secret
+                  key: password
+          ports:
+            - name: status
+              containerPort: 1936
+              protocol: TCP
+            - name: replication
+              containerPort: 6379
+              protocol: TCP
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: haproxy-template
+              mountPath: /opt/haproxy/haproxy-template.cfg
+              subPath: haproxy-template.cfg
+          terminationMessagePolicy: File
+          image: 'docker.io/ruo91/haproxy:3.2.1-20250708'
+      serviceAccount: haproxy
+      volumes:
+        - name: haproxy-template
+          configMap:
+            name: haproxy-template
+            defaultMode: 420
+      dnsPolicy: ClusterFirst
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
