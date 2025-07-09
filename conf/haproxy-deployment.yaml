@@ -2,7 +2,7 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: haproxy
-  namespace: t1-redis
+  namespace: redis
   labels:
     app: haproxy
 spec:
@@ -61,6 +61,11 @@ spec:
             successThreshold: 1
             failureThreshold: 3
           env:
+            - name: REDIS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: redis-secret
+                  key: user
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -79,7 +84,7 @@ spec:
               mountPath: /opt/haproxy/haproxy-template.cfg
               subPath: haproxy-template.cfg
           terminationMessagePolicy: File
-          image: 'docker.io/ruo91/haproxy:3.2.1-20250708'
+          image: 'docker.io/ruo91/haproxy:3.2.1-20250709'
       serviceAccount: haproxy
       volumes:
         - name: haproxy-template
