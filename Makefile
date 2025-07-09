@@ -1,6 +1,6 @@
 #CONTAINER_ENGINE ?= docker
 CONTAINER_ENGINE ?= podman
-VERSION ?= 3.2.1
+VERSION ?= 3.2.3
 NOW_DATE := $(shell date '+%Y%m%d')
 
 PLATFORM ?= linux/amd64
