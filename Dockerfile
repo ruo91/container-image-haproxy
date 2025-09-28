@@ -51,7 +51,7 @@ RUN groupadd -g $HAPROXY_GID haproxy \
 
 # Package
 ENV GPGCHECK=0
-RUN dnf install -y procps-ng openssl openssl-devel pcre2-devel zlib-devel \
+RUN dnf install -y procps-ng openssl openssl-devel pcre2-devel zlib-devel tzdata \
     libslz-devel python3-jinja2 iputils net-tools bind-utils iproute ncurses htop tcpdump wireshark-cli
 
 # Copy
@@ -62,6 +62,9 @@ COPY conf/entrypoint.sh ${PREFIX_DIR}/entrypoint.sh
 COPY conf/generate.py ${PREFIX_DIR}/generate.py
 COPY conf/haproxy-template.cfg ${PREFIX_DIR}/haproxy-template.cfg
 RUN mkdir ${PREFIX_DIR}/run && chown -R $HAPROXY_UID:$HAPROXY_GID ${PREFIX_DIR}/*
+
+# Time Zone
+ENV TZ=Asia/Seoul
 
 # Switch User
 USER 1000
