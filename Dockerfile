@@ -21,7 +21,7 @@ RUN dnf install -y @development-tools \
 
 # HAProxy Download
 ENV HAPROXY_MAJOR_VER=3.2
-ENV HAPROXY_VER=haproxy-3.2.5
+ENV HAPROXY_VER=haproxy-3.2.6
 RUN curl -o "$HAPROXY_VER.tar.gz" -L "https://www.haproxy.org/download/$HAPROXY_MAJOR_VER/src/$HAPROXY_VER.tar.gz" \
  && tar xzvf $HAPROXY_VER.tar.gz && rm -f $HAPROXY_VER.tar.gz
 
