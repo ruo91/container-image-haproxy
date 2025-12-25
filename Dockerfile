@@ -20,8 +20,8 @@ RUN dnf install -y @development-tools \
  && dnf install -y make systemd-devel git-core procps-ng openssl openssl-devel pcre2-devel zlib-devel libslz-devel
 
 # HAProxy Download
-ENV HAPROXY_MAJOR_VER=3.2
-ENV HAPROXY_VER=haproxy-3.2.6
+ENV HAPROXY_MAJOR_VER=3.3
+ENV HAPROXY_VER=haproxy-3.3.1
 RUN curl -o "$HAPROXY_VER.tar.gz" -L "https://www.haproxy.org/download/$HAPROXY_MAJOR_VER/src/$HAPROXY_VER.tar.gz" \
  && tar xzvf $HAPROXY_VER.tar.gz && rm -f $HAPROXY_VER.tar.gz
 
@@ -52,7 +52,8 @@ RUN groupadd -g $HAPROXY_GID haproxy \
 # Package
 ENV GPGCHECK=0
 RUN dnf install -y procps-ng openssl openssl-devel pcre2-devel zlib-devel tzdata \
-    libslz-devel python3-jinja2 iputils net-tools bind-utils iproute ncurses htop tcpdump wireshark-cli
+    libslz-devel python3-jinja2 iputils net-tools bind-utils iproute ncurses htop \
+    tcpdump wireshark-cli numactl numactl-libs
 
 # Copy
 COPY --from=builder ${PREFIX_DIR}/sbin/haproxy /usr/sbin/haproxy
